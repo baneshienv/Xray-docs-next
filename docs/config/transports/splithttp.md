@@ -85,7 +85,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 > `xPaddingBytes` int | string
 
-设置请求（出站）和响应（入站）的填充大小，用于减少请求指纹。单位byte, 默认为 `"100-1000"` 每次会在该范围中随机选择一个数字。 也可以是单个数字 `"200"`/`200`
+设置请求（出站）和响应（入站）的填充大小，用于减少请求指纹。单位byte, 默认为 `"100-1000"` 每次会在该范围中随机选择一个数字。为 [Int32Range](../../development/intro/guide.md#int32range) 类型
 
 设置为 `-1` 将完全禁用填充
 
@@ -95,22 +95,22 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 <Badge text="v24.9.19+" type="warning"/>
 
-允许用户对 SplitHTTP 在 h2 与 h3 中的多路复用行为进行控制，如不设置，默认行为为将所有请求复用至一条 TCP/QUIC 连接。
+仅客户端，允许用户对 SplitHTTP 在 h2 与 h3 中的多路复用行为进行控制。使用该功能时不要启用 mux.cool。
 
 ```json
 {
-  "maxConcurrency": 0,
+  "maxConcurrency": "16-32",
   "maxConnections": 0,
-  "cMaxReuseTimes": 0,
+  "cMaxReuseTimes": "64-128",
   "cMaxLifetimeMs": 0
 }
 ```
 
-由于默认是无限复用，xmux 实际上是对此进行限制。此外不要启用 mux.cool.
+上为全设置为0或者不设置时核心会填入的默认值
 
 术语解释：
 - 流会复用物理连接，像这样 连接1(流1,流2,流3) 连接2(流4,流5,流6) .. 以此类推 在其他地方你可能看到 连接-子连接 这样的描述，都是一样的东西。
-- 下述所有字段类型均为 int/string 均支持固定值 `16` 或浮动值 `"8-32"` 的写法
+- 下述所有字段类型均为 为 [Int32Range](../../development/intro/guide.md#int32range) 类型
 
 > `maxConcurrency`: int/string
 

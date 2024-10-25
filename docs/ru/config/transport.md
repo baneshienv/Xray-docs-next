@@ -12,10 +12,11 @@
 
 ```json
 {
-  "network": "tcp",
+  "network": "raw",
   "security": "none",
   "tlsSettings": {},
-  "tcpSettings": {},
+  "realitySettings": {},
+  "rawSettings": {},
   "kcpSettings": {},
   "wsSettings": {},
   "httpSettings": {},
@@ -43,9 +44,12 @@
 }
 ```
 
-> `network`: "tcp" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
+> `network`: "raw" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
 
-Тип способа передачи, используемого потоком данных соединения, по умолчанию `"tcp"`
+Тип способа передачи, используемого потоком данных соединения, по умолчанию `"raw"`
+::: tip
+**Начиная с версии v24.9.30**, для более точного отражения фактического поведения, тип передачи `tcp` был переименован в `raw`. Для обеспечения совместимости `"network": "raw"` и `"network": "tcp"`, `rawSettings` и `tcpSettings` являются синонимами.
+:::
 
 ::: tip
 "h2" можно записать как "http", "grpc" можно записать как "gun", "kcp" можно записать как "mkcp".
@@ -71,7 +75,7 @@
 Reality — это самое безопасное на данный момент решение для шифрования передачи данных, и внешний вид трафика такой же, как и при обычном просмотре веб-страниц. Включение Reality и настройка подходящего режима управления потоком XTLS Vision может повысить производительность в несколько раз или даже в десятки раз.
 :::
 
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
+> `rawSettings`: [RawObject](./transports/raw.md)
 
 Конфигурация TCP для текущего соединения, действительна только если это соединение использует TCP.
 
@@ -83,9 +87,9 @@ Reality — это самое безопасное на данный момен�
 
 Конфигурация WebSocket для текущего соединения, действительна только если это соединение использует WebSocket.
 
-> `httpSettings`: [HttpObject](./transports/h2.md)
+> `httpSettings`: [HttpObject](./transports/http.md)
 
-Конфигурация HTTP/2 для текущего соединения, действительна только если это соединение использует HTTP/2.
+Конфигурация HTTP для текущего соединения, действительна только если это соединение использует HTTP.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
@@ -245,7 +249,7 @@ Reality — это самое безопасное на данный момен�
 ```json
 {
   "show": false,
-  "dest": "example.com:443",
+  "target": "example.com:443",
   "xver": 0,
   "serverNames": ["example.com", "www.example.com"],
   "privateKey": "",
@@ -273,7 +277,7 @@ Reality — это самое безопасное на данный момен�
 Ниже приведена конфигурация для **входящего** подключения (**сервера**).
 :::
 
-> `dest` : string
+> `target` : string
 
 Обязательный параметр, формат такой же, как у [dest](./features/fallback.md#fallbackobject) в VLESS `fallbacks`.
 
